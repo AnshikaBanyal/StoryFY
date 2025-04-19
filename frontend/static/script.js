@@ -25,14 +25,22 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
           body: formData,
       });
 
+      console.log("Raw Response:", response); // Log response object for debugging
+
       if (response.ok) {
-          const data = await response.json();
-          scriptOutput.textContent = data.script;
-          loadingIndicator.style.display = "none";
-          resultSection.style.display = "block";
-      } else {
-          throw new Error("Failed to convert the PDF.");
-      }
+        // Parse and log the JSON data
+        const data = await response.json();
+        console.log("Parsed Data:", data);
+        scriptOutput.textContent = data.script;
+        loadingIndicator.style.display = "none";
+        resultSection.style.display = "block";
+    } else {
+        // Log status and any error text
+        console.error("Response Status:", response.status);
+        const errorText = await response.text();
+        console.error("Error Text:", errorText);
+        throw new Error("Failed to convert the PDF. " + errorText);
+    }
   } catch (error) {
       loadingIndicator.style.display = "none";
       alert("An error occurred: " + error.message);
